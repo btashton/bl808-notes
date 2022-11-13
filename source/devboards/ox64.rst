@@ -2,6 +2,9 @@
 Ox64
 ====
 
+.. contents:: Sections
+    :local:
+
 Summary
 -------
 This is a simple development board from Pine64:

@@ -2,6 +2,12 @@
 M1s
 ===
 
+.. contents:: Sections
+    :local:
+
+Summary
+-------
+
 This is a small but feature full board from Sipeed:
  * 30 GPIO pins
  * on-board NOR flash (16MB)
@@ -206,7 +212,8 @@ You will supply BLDevCube three binaries
 
     M1s_BL808_example/e907_app/build_out/firmware.bin
 
-Flashing the firmware
+Flashing the Firmware
+---------------------
 
 1. Place the board in bootloader mode (these are the surface buttons not the side buttons):
 
