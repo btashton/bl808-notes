@@ -1,0 +1,62 @@
+====
+Ox64
+====
+
+Summary
+-------
+This is a simple development board from Pine64:
+ * 26 GPIO pins
+ * on-board NOR flash (16Mb or 128Mb)
+ * microSD
+ * JTAG Header
+
+ More information on this board can be found `here <https://wiki.pine64.org/wiki/Ox64>`__.
+
+Useful Links
+------------
+ * https://wiki.pine64.org/wiki/Ox64
+ * https://github.com/bouffalolab/bl808_linux
+ 
+Pinout Notes
+------------
+
+The pinout in the schematic is not correct. Instead it is: 
+ 
+======= =============
+GPIO     Function
+======= =============
+6       M0_JTAG_TMS
+7       M0_JTAG_TDO
+12      M0_JTAG_TCLK
+13      M0_JTAG_TDI
+======= =============
+
+https://github.com/bouffalolab/bl_mcu_sdk/issues/32#issuecomment-1296513790
+
+Flash Notes
+-----------
+
+The development board that I was given did not have the 128Mb flash (16Mb)
+so I was not able to load many of the sample images including attempting
+to load Linux as shown in the quick start.
+
+Loading you will get an error that looks like this
+.. code-block:: 
+
+    {"ErrorCode": "003E","ErrorMsg":"BFLB FLASH LOAD VERIFY FAIL"}
+
+
+Programming Notes
+-----------------
+This board does not have a onboard USB-UART adapter.  Some adapters
+struggle to use the 2M baud programming speed and will only work at
+lower baud rates such as 115200. The Tigard adapter seemed to be fairly
+reliable.
+
+Debugging with JTAG
+-------------------
+
+When the device is placed in the bootloader mode, you are able
+to connect via JTAG. I was not able to get openocd to find the
+cores, but using cklink as documented in :doc:`../jtag` I was able to
+debug the M0 core.
