@@ -1,0 +1,26 @@
+=======
+D0 Core
+=======
+
+This is based off the T-head c906 design `(datasheet)
+<https://www.t-head.cn/product/c906?lang=en>`__
+
+The core is implemented as RV64IMAFCV with level-1 cache (32KB cache line 64B). 
+The interrupt controller supports both CLINT and PLIC.
+
+Vector Support:
+ * Compatible with RISC-V V vector extension standard (revision 0.7.1)
+ * Supports vector execution unit (128 bits)
+ * Supports INT8/INT16/INT32/FP16/FP32 vector operations
+ * Supports segment load and store instructions
+
+Because this support was implemented using the 0.7 vector specification
+many compilers do not support this at least for auto-vectorization. T-head
+provides a version of gcc with some support for this preliminary specification.
+
+Implemented standards:
+ * The RISC-V Instruction Set Manual, Volume I: RISC-V User-Level ISA, Version 2.2
+ * The RISC-V Instruction Set Manual, Volume II: RISC-V Privileged Architecture, Version 1.10
+ * RISC-V "V" Vector Extension, Version 0.7.1-20190610-Workshop-Release.
+ * RISC-V External Debug Support Version 0.13.2
+

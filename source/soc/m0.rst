@@ -1,0 +1,19 @@
+=======
+M0 Core
+=======
+
+This is based off the T-head e907 design `(datasheet)
+<https://www.t-head.cn/product/e907?lang=en>`__
+
+The core is implemented as RV32IMAFCP with the instruction (32k)
+and data (16k) cache enabled.  The interrupt controller
+is implemented with the CLIC interrupt standard.
+
+Implemented standards:
+ * The RISC-V Instruction Set Manual, Volume I: RISC-V User-Level ISA, Version 2.2
+ * The RISC-V Instruction Set Manual, Volume II: RISC-V Privileged Architecture, Version 1.10
+ * RISC-V Core-Local Interrupt Controller (CLIC) Version 0.8
+ * RISC-V External Debug Support Version 0.13.2
+ * RISC-V "P" Extension Proposal Version 0.9
+
+

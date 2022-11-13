@@ -5,6 +5,7 @@ Notes Developing with the BL808
 .. toctree::
    :maxdepth: 2
 
+   soc/soc
    devboards/boards
    jtag
 
