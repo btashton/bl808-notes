@@ -195,11 +195,59 @@ Lets take a look at the memory map defined for boot2
         ram_memory  (!rx) : ORIGIN = 0x62042000, LENGTH = 16K
     }
 
+There is not too much interesting here the XIP address is the Flash address we
+see in the memory map, and 48+4KB of ram is carved out of the OCRAM. There is
+some additional non-cached memory the spans the remainder of the OCRAM and into
+the WRAM (ends at 0x22042000) where the ram_memory region picks up.
 
 .. note:: 
-    More digging to be sorted here as we use the same linker script for the
-    M0 and D0 and the code_memory region is an interesting address. There must
-    be some remapping going on.
+    Unfortunately we do not know too much about what happens inside of the boot2
+    loader, we we will document what we discover as we go.
 
-* M0 used: M1s_BL808_SDK/components/platform/soc/bl808/startup_bl808/evb/ld/bl808_flash.ld
+Now lets move on to the next stage of the boot process.  The M0 core, first
+we take a look at the linker file that was used.
+
+::
+
+    M1s_BL808_SDK/components/platform/soc/bl808/startup_bl808/evb/ld/bl808_flash.ld
+
+.. code-block::
+    
+    BOOT2_PT_ADDR = 0x22057C00;
+    BOOT2_FLASHCFG_ADDR = 0x22057c18;
+
+    MEMORY
+    {
+        flash    (rxai!w) : ORIGIN = 0x58000000, LENGTH = 4M
+        xram_memory (!rx) : ORIGIN = 0x22020000, LENGTH = 16K 
+        ram_memory  (!rx) : ORIGIN = 0x22024000, LENGTH = 48K
+        ram_wifi    (!rx) : ORIGIN = 0x22030000, LENGTH = 96K 
+        ram_psram  (!rx)  : ORIGIN = 0x50000000, LENGTH = 1M
+        bugkill   (rxai!w) : ORIGIN = 0xD0000000, LENGTH = 16M
+    }
+
+
+There are a couple interesting things carved out here.
+
+.. note::
+    
+    There is the 4M of Flash at 0x58000000, remember this is also the address
+    that boot2 was placed at.
+
+This leads to some more details about how the flash is presented on the bus at
+that address. I will describe my understanding in more detail later, but the
+tl;dr; is the sflash controller is configured by boot2 to map for the M0
+the physical address at offset 0x10000 to 0x58000000.  This can be configured
+per core.
+
+.. note:: 
+    
+    The xram is called out as the first 16K of the OCRAM (on-chip ram).  I would
+    have expected this to be the xram at 0x40000000.  I have asked for more
+    clarity on this point from Sipeed
+    https://github.com/sipeed/M1s_BL808_SDK/issues/2
+
+
+To be continued...
+
 * D0 used: M1s_BL808_SDK/components/platform/soc/bl808/bl808/evb/ld/bl808_flash.ld

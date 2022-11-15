@@ -12,7 +12,7 @@ here can be found in the BL808 Reference manual.
     +===============+===============+=======================+=======+===========================================================================================================+
     | FLASH         | FlashA        | 0x58000000            | 64MB  | Application address space                                                                                 |
     +---------------+---------------+-----------------------+-------+-----------------------------------------------------------------------------------------------------------+
-    | PSRAM         | pSRAM         | 0x54000000            | 64MB  | pSRAM memory address space                                                                                |
+    | PSRAM         | pSRAM         | 0x50000000            | 64MB  | pSRAM memory address space                                                                                |
     +---------------+---------------+-----------------------+-------+-----------------------------------------------------------------------------------------------------------+
     | RAM           | OCRAM(MCU)    | 0x22020000            | 64KB  | On Chip RAM address space mainly for M0 application data                                                  |
     +               +---------------+-----------------------+-------+-----------------------------------------------------------------------------------------------------------+
@@ -24,6 +24,10 @@ here can be found in the BL808 Reference manual.
     +               +---------------+-----------------------+-------+-----------------------------------------------------------------------------------------------------------+
     |               | VRAM(MM)      | 0x3F000000            | 32KB  | Multimedia-side RAM address space used by D0 application data and modules like H264/NPU                   |
     +---------------+---------------+-----------------------+-------+-----------------------------------------------------------------------------------------------------------+
+
+.. important:: 
+    Some versions of the EN BL808 Reference Manual list the pSRAM base address as 0x54000000
+    this should be 0x50000000 as listed in the CN version.
 
 One things that is important to call out here which is only mentioned in the
 datasheet is the mapping of RAM via the cache.
