@@ -248,6 +248,101 @@ per core.
     https://github.com/sipeed/M1s_BL808_SDK/issues/2
 
 
+
+Early Boot
+----------
+
+Now lets take a look at what the first part of the boot process looks like for
+the e907 once the boot2 bootloader has mapped 0x58000000 to the start of our
+executable and has made the jump.
+
+This is based off of M1s_BL808_SDK/components/platform/soc/bl808/startup_bl808/evb/src/boot/gcc/startup.S)
+and I have removed the code that is conditioned on RUN_IN_RAM, since that
+this is focused on booting from flash.  I may return back to talk about booting
+from RAM as that would potentially speed up our development iteration time.
+
+.. code-block:: asm
+
+    _start:
+        .section      .text.entry
+        .align  2
+        .globl  risc_e906_start
+        .type   risc_e906_start, %function
+    risc_e906_start:
+    .option push
+    .option norelax
+        la      gp, __global_pointer$
+    .option pop
+
+
+There are already some interesting things to call out here:
+
+First, the entry point function is defined as risc_e906, and this corresponds
+to the ENTRY_POINT(risc_e906) defined in the linker script.
+
+Second, the initialization of the global pointer.  This is important for us to
+allow the linker to perform global-pointer relaxations.  This specific line
+that sets us up for this needs to disable the relaxations or we will end up
+making this assignment itself a noop.  Prior to setting the norelax we use the
+push option to store the current options on the option stack so they can be
+restored with pop. See https://github.com/riscv-non-isa/riscv-asm-manual/blob/master/riscv-asm.md#pushpop
+For more information on global pointer relaxations see this section of the RISCV
+ELF specification https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/master/riscv-elf.adoc#global-pointer-relaxation
+
+
+Now we start setting up the interrupt handling.
+
+.. code-block:: asm
+
+        la      a0, freertos_risc_v_trap_handler
+        ori     a0, a0, 3
+        csrw    mtvec, a0 
+
+        la      a0, __Vectors
+        csrw    mtvt, a0
+
+First we set the machine trap vector csr (mtvec).  This is the address with the
+mode set.  Note that we are setting the mode to 3 which is normally a reserved
+mode, _except_ this processor supports the CLIC interrupt controller.
+See :doc:`interrupts`.
+
+Next the csr `mtvt` is configured to point at the base of a table of handler
+functions (not instructions).  For RV32 4-byte pointers, for RV64 8-byte.
+
+.. note:: 
+
+    Both CLIC and CLINT support "vectored" modes, but the key difference
+    in the table is that CLIC is a table of handler pointers, where CLINT is is
+    table of instructions to jump to to handlers.
+
+    For CLINT this might look like:
+
+    .. code-block:: asm
+
+            __Vectors:
+            j   exception_common		/* 0 */
+            j   Default_Handler			/* 1 */
+            j   Default_Handler			/* 2 */
+            j   Default_Handler			/* 3 */
+            j   Default_Handler			/* 4 */
+
+    vs for CLIC:
+
+    .. code-block:: c
+
+        const pFunc __Vectors[] __attribute__ ((section(".init"),aligned(64))) = {
+        Default_Handler,
+        Default_Handler,
+        Default_Handler,
+
+
+foo
+
+    .weak __StackTop
+    la      sp, __StackTop
+    csrw    mscratch, sp
+
+
 To be continued...
 
 * D0 used: M1s_BL808_SDK/components/platform/soc/bl808/bl808/evb/ld/bl808_flash.ld

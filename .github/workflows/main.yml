@@ -27,7 +27,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4.3.0
       - name: Install Sphinx
-        run: pip install sphinx
+        run: pip install sphinx sphinxcontrib-wavedrom
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v2

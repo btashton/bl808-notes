@@ -8,6 +8,7 @@ BL808 SOC
 
    memory_layout
    boot
+   interrupts
    m0
    d0
    lp
