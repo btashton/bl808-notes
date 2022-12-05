@@ -292,6 +292,10 @@ ELF specification https://github.com/riscv-non-isa/riscv-elf-psabi-doc/blob/mast
 
 Now we start setting up the interrupt handling.
 
+.. note:: 
+
+    I highly recommend reading :doc:`interrupts` for additional context.
+
 .. code-block:: asm
 
         la      a0, freertos_risc_v_trap_handler
@@ -336,7 +340,11 @@ functions (not instructions).  For RV32 4-byte pointers, for RV64 8-byte.
         Default_Handler,
 
 
-foo
+This section is just storing the top of the stack in the scratch machine
+mode scratch space so it can be swapped to if needed when entering a trap
+vector:
+
+.. code-block:: asm
 
     .weak __StackTop
     la      sp, __StackTop
