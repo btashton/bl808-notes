@@ -208,6 +208,7 @@ Now adding in the attribute:
     }
 
 .. code-block:: asm
+
     fast_handler:
         addi    sp,sp,-16
         sd      a5,0(sp)
